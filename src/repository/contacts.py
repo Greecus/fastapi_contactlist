@@ -29,8 +29,8 @@ async def search_contacts(match_str: str, db: Session) -> List[Contact] | None:
     if not matching_contacts: return None
     return matching_contacts
 
-async def update_contact(note_id: int, body: ContactUpdate, db: Session) -> Contact | None:
-    contact = db.query(Contact).filter(Contact.id == note_id).first()
+async def update_contact(contact_id: int, body: ContactUpdate, db: Session) -> Contact | None:
+    contact = db.query(Contact).filter(Contact.id == contact_id).first()
     if contact:
         contact.name = body.name
         contact.surname = body.surname
@@ -41,12 +41,12 @@ async def update_contact(note_id: int, body: ContactUpdate, db: Session) -> Cont
         db.commit()
     return contact
 
-async def remove_contact(note_id: int, db: Session) -> Contact | None:
-    note = db.query(Contact).filter(Contact.id == note_id).first()
-    if note:
-        db.delete(note)
+async def remove_contact(contact_id: int, db: Session) -> Contact | None:
+    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+    if contact:
+        db.delete(contact)
         db.commit()
-    return note
+    return contact
 
 async def get_close_birthdays(limit:int, db: Session) -> List[Contact]:
     today = date.today()
