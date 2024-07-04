@@ -5,10 +5,8 @@ from sqlalchemy.orm import Session
 
 from src.database.models import Contact
 from src.schemas import ContactModel, ContactUpdate
-#from src.schemas import NoteModel, NoteUpdate, NoteStatusUpdate
-#from src.database.models import Note, Tag
 
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 async def create_contact(body: ContactModel, db: Session) -> Contact:
     contact = Contact(name=body.name, surname=body.surname, email=body.email, phone=body.phone, birthday=body.birthday, addition_info=body.addition_info)
@@ -58,42 +56,3 @@ async def get_close_birthdays(limit:int, db: Session) -> List[Contact]:
              extract('day', Contact.birthday) >= today.day),
         and_(extract('month', Contact.birthday) == end_day.month,
              extract('day', Contact.birthday) <= end_day.day))).all()
-    
-'''async def get_notes(skip: int, limit: int, db: Session) -> List[Contact]:
-    return db.query(Contact).offset(skip).limit(limit).all()
-
-async def get_note(note_id: int, db: Session) -> Contact:
-    return db.query(Contact).filter(Contact.id == note_id).first()
-
-async def create_note(body: NoteModel, db: Session) -> Contact:
-    tags = db.query(Tag).filter(Tag.id.in_(body.tags)).all()
-    note = Contact(title=body.title, description=body.description, tags=tags)
-    db.add(note)
-    db.commit()
-    db.refresh(note)
-    return note
-
-async def remove_note(note_id: int, db: Session) -> Note | None:
-    note = db.query(Note).filter(Note.id == note_id).first()
-    if note:
-        db.delete(note)
-        db.commit()
-    return note
-
-async def update_note(note_id: int, body: NoteUpdate, db: Session) -> Note | None:
-    note = db.query(Note).filter(Note.id == note_id).first()
-    if note:
-        tags = db.query(Tag).filter(Tag.id.in_(body.tags)).all()
-        note.title = body.title
-        note.description = body.description
-        note.done = body.done
-        note.tags = tags
-        db.commit()
-    return note
-
-async def update_status_note(note_id: int, body: NoteStatusUpdate, db: Session) -> Note | None:
-    note = db.query(Note).filter(Note.id == note_id).first()
-    if note:
-        note.done = body.done
-        db.commit()
-    return note'''
